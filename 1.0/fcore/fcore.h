@@ -73,7 +73,7 @@ namespace FCORE
 #define _FERROR_INVALID_DATA_			_T("Invalid data")
 
 ///////////////////////////////////////////////////////////////////////////////
-// KNSBuffer
+// Protocol base
 	class FCORE_API fBuffer
 	{
 	public:
@@ -90,7 +90,7 @@ namespace FCORE
 	typedef boost::shared_ptr<fBuffer>	fBufferSPtr;
 
 ///////////////////////////////////////////////////////////////////////////////
-// KNSService
+// Service base
 	class FCORE_API fService
 	{
 		FCORE_DECLARE_DYNAMIC(fService)
@@ -147,7 +147,7 @@ namespace FCORE
 	typedef	fArray<fService*>	KNSServiceArray;
 
 ///////////////////////////////////////////////////////////////////////////////
-// Cloud
+// Cloud holder
 	class FCORE_API fCloud : public fThread
 	{
 	private:

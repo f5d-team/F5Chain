@@ -137,7 +137,7 @@ namespace FCORE
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-// XParallelProcess
+// FParallelProcess
 	typedef struct tagParamPP
 	{
 		fParallelProcess *pPP;

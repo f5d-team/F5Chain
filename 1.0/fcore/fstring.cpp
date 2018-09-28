@@ -18,40 +18,6 @@ static char THIS_FILE[] = __FILE__;
 #ifdef FGBC_OS_UNIX
 #endif
 
-///////////////////////////////////////////////////////////////////////////////
-// Note for KString
-//
-// If KString class some other data than string itself, it cause error in .Format()
-// ex)
-//      class KString
-//      { 
-//          TCHAR*	m_pData;
-//          int     m_nLenData;
-//          int     m_nLenAlloc;
-//          ...
-//          ...
-//          operator LPCTSTR() const  { return m_pData; };
-//          ...
-//      }
-//
-//      KString str1, str2("Hello");
-//      int a = 10;
-//      str1.Format("%s-%d", str2, a);
-//        ==> expected "Hello-10", but result is "Hello-5"  (5 is from m_nLenData which is after m_pData)
-//      while str1.Format("%s-%d", str2.GetBuffer(), a); yields correct result. 
-//
-// So KString should have only string data, not any meta data --> How to ?
-//      struct XTagString 
-//      {
-//          int nLenData;
-//          int nLenAlloc;
-//          TCHAR* GetData() { return (this + 1); };
-//      }
-// 
-//    To allocate memory for "Hello" string, allocate memory such as pTagString = {nLenData, nLenAlloc, "Hello", '\0'}
-//    that is, pTagString = {XTagString, "Hello", '\0'} and make m_pData of KString point "Hello" which is
-//    m_pData = (char*)pTagString + sizeof(XTagString)
-
 namespace F5Chain
 {
 namespace FCORE
@@ -67,7 +33,7 @@ namespace FCORE
 
 ///////////////////////////////////////////////////////////////////////////////
 // String Utility Functions
-size_t XStrLen(LPCTSTR str)
+size_t __StrLen(LPCTSTR str)
 {
 #ifdef _UNICODE
 	return (str == NULL) ? 0 : wcslen(str);
@@ -76,7 +42,7 @@ size_t XStrLen(LPCTSTR str)
 #endif
 }
 
-LPCTSTR XStrInc(LPCTSTR str)
+LPCTSTR __StrInc(LPCTSTR str)
 {
 #ifdef _UNICODE
 	return str+1; 
@@ -85,7 +51,7 @@ LPCTSTR XStrInc(LPCTSTR str)
 #endif
 }
 
-LPCTSTR XStrDec(LPCTSTR str)
+LPCTSTR __StrDec(LPCTSTR str)
 {
 #ifdef _UNICODE
 	return str-1; 
@@ -94,7 +60,7 @@ LPCTSTR XStrDec(LPCTSTR str)
 #endif
 }
 
-int XStrToInt(LPCTSTR str)
+int __StrToInt(LPCTSTR str)
 {
 #ifdef _UNICODE
 	return _wtoi(str);
@@ -103,7 +69,7 @@ int XStrToInt(LPCTSTR str)
 #endif
 }
 
-int XIsDigit(TCHAR c)
+int __IsDigit(TCHAR c)
 {
 #ifdef _UNICODE
 	return iswdigit(c);
@@ -112,7 +78,7 @@ int XIsDigit(TCHAR c)
 #endif
 }
 
-int XStrnCmp(LPCTSTR str1, LPCTSTR str2, size_t count)
+int __StrnCmp(LPCTSTR str1, LPCTSTR str2, size_t count)
 {
 #ifdef _UNICODE
 	return wcsncmp(str1, str2, count);
@@ -122,16 +88,16 @@ int XStrnCmp(LPCTSTR str1, LPCTSTR str2, size_t count)
 }
 
 // Boyer-Moore String search algorithm
-int bad_char(LPCTSTR str, TCHAR ch, int pos)
+int __bad_char(LPCTSTR str, TCHAR ch, int pos)
 {
 	for (int i=pos; i>=0; i--) if (str[i] == ch) return i;
 	return -1;
 }
 
-int good_suffix(LPCTSTR str, int pos)
+int __good_suffix(LPCTSTR str, int pos)
 {
 	int i, j, len;
-	len = (int)XStrLen(str);
+	len = (int)__StrLen(str);
 	for (i=len-2; i>=(len-pos-2); i--)
 	{
 		for(j=0; j<(len-pos-1); j++) { if (str[i-j] != str[len-j-1]) break; }
@@ -140,23 +106,23 @@ int good_suffix(LPCTSTR str, int pos)
 	return -1;
 }
 
-int XStrSearch(LPCTSTR str1, LPCTSTR str2)
+int __StrSearch(LPCTSTR str1, LPCTSTR str2)
 {
 	int i, j, len1, len2;
-	len1 = (int)XStrLen(str1);
-	len2 = (int)XStrLen(str2);
+	len1 = (int)__StrLen(str1);
+	len2 = (int)__StrLen(str2);
 	for (i=0; i<=(len1-len2);)
 	{
 		for (j=len2-1; j>=0 && str2[j] == str1[i+j]; j--);
 		if (j < 0) return i;
-		i = i + j - min(bad_char(str2, str1[i+j], j), good_suffix(str2, j));
+		i = i + j - min(__bad_char(str2, str1[i+j], j), __good_suffix(str2, j));
 	}
 	return -1;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// KString Implementation
+// Implementation
 fTagString* fString::CreateTagString(int nLen)
 {
 	// workaround for CODESONAR
@@ -461,7 +427,7 @@ fString operator+(TCHAR ch, const fString& str)
 fString operator+(const fString& str1, LPCTSTR str2)
 {
 	fString strOut;
-	strOut.Alloc(str1.GetLength() + (int)XStrLen(str2));
+	strOut.Alloc(str1.GetLength() + (int)__StrLen(str2));
 	strOut.CopyFrom(str1);
 	strOut += str2;
 	return strOut;
@@ -470,7 +436,7 @@ fString operator+(const fString& str1, LPCTSTR str2)
 fString operator+(LPCTSTR str1, const fString& str2)
 {
 	fString strOut;
-	strOut.Alloc((int)XStrLen(str1) + str2.GetLength());
+	strOut.Alloc((int)__StrLen(str1) + str2.GetLength());
 	strOut.CopyFrom(str1);
 	strOut += str2;
 	return strOut;
@@ -707,7 +673,7 @@ void fString::TrimLeft(LPCTSTR str)
 	int nLenData = GetLength();
 	if (nLenData == 0) return;
 
-	int nLenStr = (int)XStrLen(str);
+	int nLenStr = (int)__StrLen(str);
 	if (nLenStr == 0) return;
 
 	// find matching position from left
@@ -730,7 +696,7 @@ void fString::TrimRight(LPCTSTR str)
 	int nLenData = GetLength();
 	if (nLenData == 0) return;
 
-	int nLenStr = (int)XStrLen(str);
+	int nLenStr = (int)__StrLen(str);
 	if (nLenStr == 0) return;
 
 	// find matching position from right
@@ -768,8 +734,8 @@ int fString::Replace(LPCTSTR strOld, LPCTSTR strNew)
 	int nLenData = GetLength();
 	if (nLenData == 0) return nCount;
 
-	int nLenOld = (int)XStrLen(strOld);
-	int nLenNew = (int)XStrLen(strNew);
+	int nLenOld = (int)__StrLen(strOld);
+	int nLenNew = (int)__StrLen(strNew);
 	if (nLenOld == 0) return nCount;
 
 	fString strOut, strSub;
@@ -892,7 +858,7 @@ int fString::Insert(int nIndex, LPCTSTR str)
 	if (nIndex >= nLenData) nIndex = nLenData;
 	
 	int nLenStr, nLenDataNew;
-	nLenStr = (int)XStrLen(str);
+	nLenStr = (int)__StrLen(str);
 	if (nLenStr == 0) return GetLength();
 
 	// output string length
@@ -951,10 +917,10 @@ int fString::Find(LPCTSTR str, int nStart) const
 	if (nLenData == 0) return -1;
 	if (nStart < 0 || nStart >= nLenData) return -1;
 
-	int nLenStr = (int)XStrLen(str);
+	int nLenStr = (int)__StrLen(str);
 	if (nLenStr == 0 || nLenStr > nLenData) return -1;
 
-	return XStrSearch(m_pData + nStart, str);
+	return __StrSearch(m_pData + nStart, str);
 }
 
 int fString::FindOneOf(LPCTSTR str) const
@@ -962,7 +928,7 @@ int fString::FindOneOf(LPCTSTR str) const
 	int nLenData = GetLength();	
 	if (nLenData == 0) return -1;
 
-	int nLenStr = (int)XStrLen(str);
+	int nLenStr = (int)__StrLen(str);
 	if (nLenStr == 0 || nLenStr > nLenData) return -1;
 
 	int i, j;
@@ -988,7 +954,7 @@ int fString::ReverseFind(TCHAR ch) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// KString Formatting
+// Formatting
 
 #define TCHAR_ARG   TCHAR
 #define WCHAR_ARG   wchar_t
@@ -1004,12 +970,12 @@ void fString::FormatV(LPCTSTR lpszFormat, va_list argList)
 
 	// make a guess at the maximum length of the resulting string
 	int nMaxLen = 0;
-	for (LPCTSTR lpsz = lpszFormat; *lpsz != '\0'; lpsz = XStrInc(lpsz))
+	for (LPCTSTR lpsz = lpszFormat; *lpsz != '\0'; lpsz = __StrInc(lpsz))
 	{
 		// handle '%' character, but watch out for '%%'
-		if (*lpsz != '%' || *(lpsz = XStrInc(lpsz)) == '%')
+		if (*lpsz != '%' || *(lpsz = __StrInc(lpsz)) == '%')
 		{
-			nMaxLen += (int)XStrLen(lpsz);
+			nMaxLen += (int)__StrLen(lpsz);
 			continue;
 		}
 
@@ -1017,7 +983,7 @@ void fString::FormatV(LPCTSTR lpszFormat, va_list argList)
 
 		// handle '%' character with format
 		int nWidth = 0;
-		for (; *lpsz != '\0'; lpsz = XStrInc(lpsz))
+		for (; *lpsz != '\0'; lpsz = __StrInc(lpsz))
 		{
 			// check for valid flags
 			if (*lpsz == '#')
@@ -1034,8 +1000,8 @@ void fString::FormatV(LPCTSTR lpszFormat, va_list argList)
 		if (nWidth == 0)
 		{
 			// width indicated by
-			nWidth = XStrToInt(lpsz);
-			for (; *lpsz != '\0' && XIsDigit(*lpsz); lpsz = XStrInc(lpsz))
+			nWidth = __StrToInt(lpsz);
+			for (; *lpsz != '\0' && __IsDigit(*lpsz); lpsz = __StrInc(lpsz))
 				;
 		}
 		KASSERT(nWidth >= 0);
@@ -1044,18 +1010,18 @@ void fString::FormatV(LPCTSTR lpszFormat, va_list argList)
 		if (*lpsz == '.')
 		{
 			// skip past '.' separator (width.precision)
-			lpsz = XStrInc(lpsz);
+			lpsz = __StrInc(lpsz);
 
 			// get precision and skip it
 			if (*lpsz == '*')
 			{
 				nPrecision = _crt_va_arg(argList, int);
-				lpsz = XStrInc(lpsz);
+				lpsz = __StrInc(lpsz);
 			}
 			else
 			{
-				nPrecision = XStrToInt(lpsz);
-				for (; *lpsz != '\0' && XIsDigit(*lpsz); lpsz = XStrInc(lpsz))
+				nPrecision = __StrToInt(lpsz);
+				for (; *lpsz != '\0' && __IsDigit(*lpsz); lpsz = __StrInc(lpsz))
 					;
 			}
 			KASSERT(nPrecision >= 0);
@@ -1064,9 +1030,9 @@ void fString::FormatV(LPCTSTR lpszFormat, va_list argList)
 		// should be on type modifier or specifier
 		int nModifier = 0;
 #ifdef _UNICODE
-		if (XStrnCmp(lpsz, L"I64", 3) == 0)
+		if (__StrnCmp(lpsz, L"I64", 3) == 0)
 #else
-		if (XStrnCmp(lpsz, "I64", 3) == 0)
+		if (__StrnCmp(lpsz, "I64", 3) == 0)
 #endif
 		{
 			lpsz += 3;
@@ -1079,18 +1045,18 @@ void fString::FormatV(LPCTSTR lpszFormat, va_list argList)
 			// modifiers that affect size
 			case 'h':
 				nModifier = FORCE_ANSI;
-				lpsz = XStrInc(lpsz);
+				lpsz = __StrInc(lpsz);
 				break;
 			case 'l':
 				nModifier = FORCE_UNICODE;
-				lpsz = XStrInc(lpsz);
+				lpsz = __StrInc(lpsz);
 				break;
 
 			// modifiers that do not affect size
 			case 'F':
 			case 'N':
 			case 'L':
-				lpsz = XStrInc(lpsz);
+				lpsz = __StrInc(lpsz);
 				break;
 			}
 		}
@@ -1136,7 +1102,7 @@ void fString::FormatV(LPCTSTR lpszFormat, va_list argList)
 				   nItemLen = 6;  // "(null)"
 				else
 				{
-				   nItemLen = (int)XStrLen(pstrNextArg);
+				   nItemLen = (int)__StrLen(pstrNextArg);
 				   nItemLen = max(1, nItemLen);
 				}
 			}
@@ -1242,7 +1208,7 @@ void fString::FormatV(LPCTSTR lpszFormat, va_list argList)
 	}
 
 	// set exact size of string
-	SetLength(XStrLen(m_pData));
+	SetLength(__StrLen(m_pData));
 
 	_crt_va_end(argListSave);
 }
