@@ -1,3 +1,6 @@
+///////////////////////////////////////////////////////////////////////////////
+// Developed by Curiosity laboratory 2018
+
 #pragma once
 #include "fbase.h"
 
@@ -31,27 +34,6 @@
 #pragma warning(pop)
 
 #endif
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-// 
-#ifndef FGBCCORE_DYNAMIC
-#define FCORE_API  
-#pragma comment(lib,_FGBC_LIB_NAME_("fcore"))
-#else	// DLL
-#ifdef FGBCCORE_EXPORTS
-#define FCORE_API __declspec(dllexport)
-#else
-#define FCORE_API __declspec(dllimport)
-#ifndef FGBCCORE_INGORE_AUTO_LINK
-#pragma comment(lib,_FGBC_LIB_NAME_("fcore"))
-#endif
-#endif	//FGBCCORE_EXPORTS
-#endif	//FGBCORE_DYNAMIC
-//
-///////////////////////////////////////////////////////////////////////////////
-
 
 
 namespace F5Chain

@@ -192,7 +192,8 @@
       <ImportLibrary>..\..\Bin\Lib\MSDx86\$(TargetName).lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectName).h ..\output\header</Command>
+      <Command>copy $(ProjectName).h ..\output\header
+copy fbase.h ..\output\header</Command>
     </PostBuildEvent>
     <Lib>
     </Lib>
@@ -206,7 +207,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>FGBCCORE_DYNAMIC;WIN32;_DEBUG;FGBCCORE_EXPORTS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>F5C_DYNAMIC;WIN32;_DEBUG;FGBCCORE_EXPORTS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>..\output\header</AdditionalIncludeDirectories>
     </ClCompile>
@@ -220,7 +221,8 @@
       <AdditionalLibraryDirectories>..\output\lib\MDDx86;..\output\lib\boost_win32</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectName).h ..\output\header</Command>
+      <Command>copy $(ProjectName).h ..\output\header
+copy fbase.h ..\output\header</Command>
     </PostBuildEvent>
     <Lib />
     <Lib>
@@ -245,7 +247,8 @@
       <AdditionalDependencies>Dbghelp.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectName).h ..\output\header</Command>
+      <Command>copy $(ProjectName).h ..\output\header
+copy fbase.h ..\output\header</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>..\output\lib\boost_x64;..\output\lib\MSDx64</AdditionalLibraryDirectories>
@@ -256,7 +259,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>FGBCCORE_DYNAMIC;WIN64;_DEBUG;FGBCCORE_EXPORTS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>F5C_DYNAMIC;WIN64;_DEBUG;FGBCCORE_EXPORTS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>..\output\header</AdditionalIncludeDirectories>
     </ClCompile>
@@ -270,7 +273,8 @@
       </AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectName).h ..\output\header</Command>
+      <Command>copy $(ProjectName).h ..\output\header
+copy fbase.h ..\output\header</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>.\lib\</AdditionalLibraryDirectories>
@@ -296,7 +300,8 @@
       <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectName).h ..\output\header</Command>
+      <Command>copy $(ProjectName).h ..\output\header
+copy fbase.h ..\output\header</Command>
     </PostBuildEvent>
     <Lib>
     </Lib>
@@ -311,7 +316,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>FGBCCORE_DYNAMIC;WIN32;NDEBUG;FGBCCORE_EXPORTS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>F5C_DYNAMIC;WIN32;NDEBUG;FGBCCORE_EXPORTS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>..\output\header</AdditionalIncludeDirectories>
     </ClCompile>
@@ -325,7 +330,8 @@
       <AdditionalLibraryDirectories>..\output\lib\MDRx86;..\output\lib\boost_win32</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectName).h ..\output\header</Command>
+      <Command>copy $(ProjectName).h ..\output\header
+copy fbase.h ..\output\header</Command>
     </PostBuildEvent>
     <Lib />
     <Lib>
@@ -353,7 +359,8 @@
       <AdditionalDependencies>dbghelp.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectName).h ..\output\header</Command>
+      <Command>copy $(ProjectName).h ..\output\header
+copy fbase.h ..\output\header</Command>
     </PostBuildEvent>
     <Lib>
     </Lib>
@@ -368,7 +375,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>FGBCCORE_DYNAMIC;WIN64;NDEBUG;FGBCCORE_EXPORTS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>F5C_DYNAMIC;WIN64;NDEBUG;FGBCCORE_EXPORTS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>..\output\header</AdditionalIncludeDirectories>
     </ClCompile>
@@ -382,7 +389,8 @@
       <AdditionalLibraryDirectories>..\output\lib\MDRx64;..\output\lib\boost_x64</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectName).h ..\output\header</Command>
+      <Command>copy $(ProjectName).h ..\output\header
+copy fbase.h ..\output\header</Command>
     </PostBuildEvent>
     <Lib />
     <Lib>

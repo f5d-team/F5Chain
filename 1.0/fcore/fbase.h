@@ -1,24 +1,27 @@
+///////////////////////////////////////////////////////////////////////////////
+// Developed by Curiosity laboratory 2018
+
 #pragma once
 #define FGBC_OS_WIN
 
-#define _FGBC_LIB_NAME_(PROJECT)		PROJECT ## ".lib"
-#define _FGBC_DLL_NAME_(PROJECT)		PROJECT ## ".dll"
+#define _F5C_LIB_NAME_(PROJECT)		PROJECT ## ".lib"
+#define _F5C_DLL_NAME_(PROJECT)		PROJECT ## ".dll"
 
 ///////////////////////////////////////////////////////////////////////////////
-// 
-#ifndef FGBCCORE_DYNAMIC
+//
+#ifndef F5C_DYNAMIC
 #define FCORE_API  
-#pragma comment(lib,_FGBC_LIB_NAME_("fcore"))
+#pragma comment(lib,_F5C_LIB_NAME_("fcore"))
 #else	// DLL
 #ifdef FGBCCORE_EXPORTS
 #define FCORE_API __declspec(dllexport)
 #else
 #define FCORE_API __declspec(dllimport)
-#ifndef FGBCCORE_INGORE_AUTO_LINK
-#pragma comment(lib,_FGBC_LIB_NAME_("fcore"))
+#ifndef F5CCORE_INGORE_AUTO_LINK
+#pragma comment(lib,_F5C_LIB_NAME_("fcore"))
 #endif
 #endif	//FGBCCORE_EXPORTS
-#endif	//FGBCORE_DYNAMIC
+#endif	//F5C_DYNAMIC
 //
 ///////////////////////////////////////////////////////////////////////////////
 
